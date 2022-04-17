@@ -49,7 +49,8 @@ bool OpenKNX::checkProgButtonDuringStartup()
     if (knx.buttonPin()) 
     {
         // check if button is pressed
-        result = (digitalRead(knx.buttonPin()) == factoryResetOn());
+        uint8_t buttonValue = digitalRead(knx.buttonPin());
+        result = (buttonValue == factoryResetOn());
         if (result && knx.ledPin()) 
         {
             // if there is a led, we reflect the firmware reset with 5 blink signals
