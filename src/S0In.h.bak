@@ -1,0 +1,33 @@
+#include <Arduino.h>
+
+class S0Input
+{
+private:
+
+    static void callbackDispatcher(void *iInstance);
+    void pinInterruptHandler();
+
+#ifndef ARDUINO_ARCH_RP2040
+    static uint8_t sCallbackCounter;
+    static void *sInstance[10];
+
+    static void callback0();
+    static void callback1();
+    static void callback2();
+    static void callback3();
+    static void callback4();
+    static void callback5();
+    static void callback6();
+    static void callback7();
+    static void callback8();
+    static void callback9();
+#endif
+
+
+public:
+    S0Input(/* args */);
+    ~S0Input();
+    void setup();
+    void attachInterruptHandlerMethod(uint32_t iPin, uint32_t iMode);
+};
+

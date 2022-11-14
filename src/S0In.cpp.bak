@@ -1,0 +1,124 @@
+#include "S0In.h"
+
+#ifndef ARDUINO_ARCH_RP2040
+uint8_t S0Input::sCallbackCounter = 0;
+void *S0Input::sInstance[10] = {nullptr};
+#endif
+
+S0Input::S0Input(/* args */)
+{
+}
+
+S0Input::~S0Input()
+{
+}
+
+// das ist der Ersatz für attachInterrupt
+void S0Input::attachInterruptHandlerMethod(uint32_t iPin, uint32_t iMode)
+{
+#ifdef ARDUINO_ARCH_RP2040
+    attachInterruptParam(iPin, callbackDispatcher, iMode, this);
+#else
+    sInstance[sCallbackCounter] = this;
+    switch (sCallbackCounter)
+    {
+    case 0:
+        attachInterrupt(iPin, callback0, iMode);
+        break;
+    case 1:
+        attachInterrupt(iPin, callback1, iMode);
+        break;
+    case 2:
+        attachInterrupt(iPin, callback2, iMode);
+        break;
+    case 3:
+        attachInterrupt(iPin, callback3, iMode);
+        break;
+    case 4:
+        attachInterrupt(iPin, callback4, iMode);
+        break;
+    case 5:
+        attachInterrupt(iPin, callback5, iMode);
+        break;
+    case 6:
+        attachInterrupt(iPin, callback6, iMode);
+        break;
+    case 7:
+        attachInterrupt(iPin, callback7, iMode);
+        break;
+    case 8:
+        attachInterrupt(iPin, callback8, iMode);
+        break;
+    case 9:
+        attachInterrupt(iPin, callback9, iMode);
+        break;
+    
+    default:
+        break;
+    }
+    sCallbackCounter++;
+#endif
+}
+
+// diese Methode (statisch) empfängt alle callbacks und leitet die an die jeweilige Instanz weiter
+void S0Input::callbackDispatcher(void *iInstance)
+{
+    S0Input *self = static_cast<S0Input *>(iInstance);
+    self->pinInterruptHandler();
+}
+
+#ifndef ARDUINO_ARCH_RP2040
+void S0Input::callback0() {
+    S0Input::callbackDispatcher(sInstance[0]);
+}
+
+void S0Input::callback1() {
+    S0Input::callbackDispatcher(sInstance[1]);
+}
+
+void S0Input::callback2() {
+    S0Input::callbackDispatcher(sInstance[2]);
+}
+
+void S0Input::callback3() {
+    S0Input::callbackDispatcher(sInstance[3]);
+}
+
+void S0Input::callback4() {
+    S0Input::callbackDispatcher(sInstance[4]);
+}
+
+void S0Input::callback5() {
+    S0Input::callbackDispatcher(sInstance[5]);
+}
+
+void S0Input::callback6() {
+    S0Input::callbackDispatcher(sInstance[6]);
+}
+
+void S0Input::callback7() {
+    S0Input::callbackDispatcher(sInstance[7]);
+}
+
+void S0Input::callback8() {
+    S0Input::callbackDispatcher(sInstance[8]);
+}
+
+void S0Input::callback9() {
+    S0Input::callbackDispatcher(sInstance[9]);
+}
+#endif
+
+// das ist die Methode, die den interrupt behandelt
+void S0Input::pinInterruptHandler()
+{
+    // hier kommt das Coding für den Interrupthandler hin
+}
+
+// im setup oder im constructor, auf jeden Fall IN der Klasse und nicht außerhalb,
+// muss der neue attach stehen
+void S0Input::setup()
+{
+    // hier kannst Du pro Instanz ein attach machen
+    attachInterruptHandlerMethod(22, HIGH);
+}

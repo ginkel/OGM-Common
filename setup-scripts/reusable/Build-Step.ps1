@@ -16,6 +16,8 @@ $pioEnv = $args[0]
 $firmwareName = $args[1]
 $binaryFormat = $args[2]
 
+# ensure, that always a complete build is done for release
+Remove-Item -Recurse ".pio/build"
 ~/.platformio/penv/Scripts/pio.exe run -e $pioEnv
 if (!$?) {
     Write-Host "$pioEnv build failed, Release was not built!"
