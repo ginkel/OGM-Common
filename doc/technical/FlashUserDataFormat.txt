@@ -1,0 +1,77 @@
+OpenKnxModulesDataStorage   (OKMDS) - v1
+
+// Open Questions/Issues
+// - byte order
+// - checksum
+// - prevent overwriting other data or firmware in flash memory
+// - handling of 0 modules
+// - handling for duplicate module-data, which should never occur (undefined/ignore/overwrite ?)
+// - filling of unused space in MOD_DATA (0x00/0xff/..?)
+// - optional: version information for modules
+
+// Overall structure is optimized for fast sequential writing, 
+// to maximize the change of writing completely after detection of power loss.
+// Partial writing should be detectable.
+// Aligned to end of flash, as we do *not* want to use a fixed starting position.
+// The length of DATA depends on modules, 
+// length of HEAD and CHECKSUM might depend on format version defined in INTRO.
+OKMDS    	:= DATA ; HEAD ; CHECKSUM ; INTRO
+
+// Intro for Identification (and possible versioning later).
+// 4 byte fix length and value of first 2 bytes, must *never* change!
+// Constant value of characters “OKV” followed by 0x01
+// (... as long we don’t need a change)
+INTRO	    := MAGIC_BYTES ; MAGIC_VER
+MAGIC_BYTES	:= 'O' ; 'K'
+MAGIC_VER 	:= 'V' ; FORMAT_VER
+// *Important:* Format number is an unsigned integer and not a char!
+FORMAT_VER 	:= <uint8_t> const 1    
+
+CONTENT	:= DATA ; HEAD
+// A checksum over all bytes of CONTENT
+// Note: length may change for `FORMAT_VER > 1`
+// TODO: checksum(uint8_t[]) needs specification. Must be fast and ...
+CHECKSUM	:= <uint_16> checksum(CONTENT)
+
+HEAD 	    := APP_INFO ; DATA_LENGTH
+
+APP_INFO	:= APP_ID ; APP_NUMBER ; APP_VERSION ; APP_REV
+// Firmware-Version in ETS is shown as ‘[x]y.z’ with
+//   x = APP_REV 
+//   y = APP_VERSION >> 4    (upper half-byte)
+//   z = APP_VERSION & 0x0f  (lower half-byte)
+APP_ID	    := uint8_t `MAIN_OpenKnxId`
+APP_NUMBER	:= uint8_t `MAIN_ApplicationNumber`   // ETS Firmware „Application Version“
+APP_VERSION	:= uint8_t `MAIN_ApplicationVersion`  // „y.z“
+APP_REV	    := uint8_t `COMMON->firmwareRevision` // “[x]”
+
+// Define the length and position of DATA:
+// &DATA := &HEAD - DATA_LENGTH
+// 2 bytes for length is sufficient, as >64K needs to much time to write.
+DATA_LENGTH	:= uint16_t
+
+// Note: Number of modules is not (directly) limited by this structure,
+//       but indirectly by max(DATA_LENGTH) and sizeof(MOD_META)
+DATA	    := MODULE+
+
+// Date of a single module. 
+MODULE	    := MOD_META ; MOD_DATA
+MOD_META	:= MOD_ID ; MOD_ MOD_LENGTH
+// Identification of ModuleType as in knxprod. 
+// Allows different ordering of modules in storage.
+MOD_ID	    := uint8_t
+// Define the length of MOD_DATA and position of following MODULE-block:
+// &MODULE[i+1] := &MODULE[i] + sizeof(MOD_META) + MOD_LENGTH
+MOD_LENGTH	:= uint16_t
+
+// Content defined by the module (referenced in MOD_ID) only.
+// Module must not write >MOD_LENGTH bytes
+// Module may write <MOD_LENGTH bytes, 
+//   unused bytes will be filled to ensure defined DATA and resulting CHECKSUM
+MOD_DATA	:= uint8_t{$MOD_LEN}
+
+// Assertion: 
+// &MODULE[last] + sizeof(MOD_META) + MODULE[last].MOD_LENGTH = &HEAD 
+// DATA and MODULE entries must not overlap with HEAD
+// Unused space after last MODULE would result in trying to process a non-existing module
+// and should result in wrong CHECKSUM.
