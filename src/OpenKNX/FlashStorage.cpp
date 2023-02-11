@@ -47,7 +47,6 @@ namespace OpenKNX
         uint8_t *currentPosition;
         uint8_t moduleId = 0;
         uint16_t moduleSize = 0;
-        uint16_t dataSize = 0;
         uint16_t dataProcessed = 0;
         Module *module = nullptr;
 
@@ -61,7 +60,7 @@ namespace OpenKNX
         }
 
         // read size
-        dataSize = (currentPosition[FLASH_DATA_META_LEN - 8] << 8) + currentPosition[FLASH_DATA_META_LEN - 7];
+        const uint16_t dataSize = (currentPosition[FLASH_DATA_META_LEN - 8] << 8) + currentPosition[FLASH_DATA_META_LEN - 7];
 
         // read FirmwareVersion
         _currentReadAddress = currentPosition;
