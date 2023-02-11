@@ -59,7 +59,8 @@ namespace OpenKNX
 
         // check magicwords exists
         currentPosition = _flashStart + _flashSize - FLASH_DATA_META_LEN;
-        if (FLASH_DATA_INIT != getInt(currentPosition + FLASH_DATA_META_LEN - FLASH_DATA_INIT_LEN))
+        _currentReadAddress = currentPosition + FLASH_DATA_META_LEN - FLASH_DATA_INIT_LEN;
+        if (FLASH_DATA_INIT != readInt())
         {
             logInfoP("Abort: No data found");
             return;
