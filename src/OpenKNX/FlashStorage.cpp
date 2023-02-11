@@ -45,10 +45,6 @@ namespace OpenKNX
     void FlashStorage::readData()
     {
         uint8_t *currentPosition;
-        uint8_t moduleId = 0;
-        uint16_t moduleSize = 0;
-        uint16_t dataProcessed = 0;
-        Module *module = nullptr;
 
         // check magicwords exists
         currentPosition = _flashStart + _flashSize - FLASH_DATA_META_LEN;
@@ -91,6 +87,10 @@ namespace OpenKNX
         openknx.logHex("FlashStorage", currentPosition, dataSize + FLASH_DATA_META_LEN);
 #endif
 
+        uint8_t moduleId = 0;
+        uint16_t moduleSize = 0;
+        Module *module = nullptr;
+        uint16_t dataProcessed = 0;
         while (dataProcessed < dataSize)
         {
             _currentReadAddress = currentPosition;
