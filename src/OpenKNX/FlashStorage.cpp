@@ -60,7 +60,8 @@ namespace OpenKNX
         }
 
         // read size
-        const uint16_t dataSize = (currentPosition[FLASH_DATA_META_LEN - 8] << 8) + currentPosition[FLASH_DATA_META_LEN - 7];
+        _currentReadAddress = currentPosition + FLASH_DATA_META_LEN - 8
+        const uint16_t dataSize = readWord();
 
         // read FirmwareVersion
         _currentReadAddress = currentPosition;
