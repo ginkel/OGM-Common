@@ -248,10 +248,7 @@ namespace OpenKNX
 
     void FlashStorage::writeByte(uint8_t value)
     {
-        uint8_t *buffer = new uint8_t[1];
-        buffer[0] = value;
-        write(buffer);
-        delete buffer;
+        write(value, 1);
     }
 
     void FlashStorage::writeWord(uint16_t value)
