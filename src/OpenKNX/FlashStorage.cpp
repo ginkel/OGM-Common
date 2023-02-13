@@ -169,7 +169,7 @@ namespace OpenKNX
                 writeWord(moduleSize);
 
                 // write the module data
-                _maxWriteAddress = _currentWriteAddress + moduleSize;
+                _maxWriteAddress += moduleSize;
                 module->writeFlash();
                 writeFilldata();
             }
