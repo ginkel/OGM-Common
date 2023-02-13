@@ -59,10 +59,6 @@ namespace OpenKNX
 
         currentPosition = _flashStart + _flashSize - FLASH_DATA_META_LEN;
 
-        // read size
-        _currentReadAddress = currentPosition + FLASH_DATA_META_LEN - FLASH_DATA_INIT_LEN - FLASH_DATA_CHK_LEN - FLASH_DATA_SIZE_LEN;
-        const uint16_t dataSize = readWord();
-
         // read FirmwareVersion
         _currentReadAddress = currentPosition;
         _lastFirmwareNumber = readWord();
@@ -70,6 +66,10 @@ namespace OpenKNX
 
         _lastFirmwareVersion = readWord();
         logDebugP("FirmwareVersion: %i", _lastFirmwareVersion);
+
+        // read size
+        _currentReadAddress = currentPosition + FLASH_DATA_META_LEN - FLASH_DATA_INIT_LEN - FLASH_DATA_CHK_LEN - FLASH_DATA_SIZE_LEN;
+        const uint16_t dataSize = readWord();
 
         // validate checksum
         currentPosition = (currentPosition - dataSize);
