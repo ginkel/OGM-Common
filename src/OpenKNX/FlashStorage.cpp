@@ -47,8 +47,6 @@ namespace OpenKNX
     */
     void FlashStorage::readData()
     {
-        uint8_t *currentPosition;
-
         // check magicwords exists (at last position)
         _currentReadAddress = _flashStart + _flashSize - FLASH_DATA_INIT_LEN;
         if (FLASH_DATA_INIT != readInt())
@@ -73,6 +71,8 @@ namespace OpenKNX
 
         // read size
         const uint16_t dataSize = readWord();
+
+        uint8_t *currentPosition;
 
         // validate checksum
         currentPosition = (_flashStart + _flashSize - FLASH_DATA_META_LEN - dataSize);
