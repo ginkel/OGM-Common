@@ -27,15 +27,12 @@ namespace OpenKNX
     void FlashStorage::initUnloadedModules()
     {
         Modules *modules = openknx.getModules();
-        Module *module = nullptr;
-        uint8_t moduleId = 0;
-        uint16_t moduleSize = 0;
         for (uint8_t i = 0; i < modules->count; i++)
         {
             // check module expectation and load state
-            module = modules->list[i];
-            moduleId = modules->ids[i];
-            moduleSize = module->flashSize();
+            Module *module = modules->list[i];
+            const uint8_t moduleId = modules->ids[i];
+            const uint16_t moduleSize = module->flashSize();
 
             if (moduleSize > 0 && !loadedModules[moduleId])
             {
