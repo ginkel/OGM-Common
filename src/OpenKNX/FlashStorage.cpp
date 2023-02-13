@@ -175,7 +175,7 @@ namespace OpenKNX
             }
         }
 
-        // write magicword
+        // block of metadata
         _maxWriteAddress = _currentWriteAddress + FLASH_DATA_META_LEN;
 
         // application info
