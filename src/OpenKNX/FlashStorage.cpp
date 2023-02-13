@@ -117,9 +117,6 @@ namespace OpenKNX
         _flashStart = knx.platform().getNonVolatileMemoryStart();
 
         uint32_t start = millis();
-        uint8_t moduleId = 0;
-        uint16_t moduleSize = 0;
-        Module *module = nullptr;
 
         // table is not loaded (ets prog running) and save is not possible
         if (!knx.configured())
@@ -138,7 +135,7 @@ namespace OpenKNX
         uint16_t dataSize = 0;
         for (uint8_t i = 0; i < modules->count; i++)
         {
-            moduleSize = modules->list[i]->flashSize();
+            const uint16_t moduleSize = modules->list[i]->flashSize();
             if (moduleSize > 0)
             {
                 dataSize += FLASH_DATA_MODULE_ID_LEN + FLASH_DATA_SIZE_LEN + moduleSize;
@@ -158,10 +155,9 @@ namespace OpenKNX
 
         for (uint8_t i = 0; i < modules->count; i++)
         {
-            // get data
-            module = modules->list[i];
-            moduleSize = module->flashSize();
-            moduleId = modules->ids[i];
+            Module *module = modules->list[i];
+            const uint16_t moduleSize = module->flashSize();
+            const uint8_t moduleId = modules->ids[i];
 
             if (moduleSize == 0)
                 continue;
