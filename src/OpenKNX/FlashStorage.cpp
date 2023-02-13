@@ -152,14 +152,14 @@ namespace OpenKNX
 
         logTraceP("startPosition: %i", _currentWriteAddress);
 
+        // write data for all modules
         for (uint8_t i = 0; i < modules->count; i++)
         {
             Module *module = modules->list[i];
             const uint16_t moduleSize = module->flashSize();
-            const uint8_t moduleId = modules->ids[i];
-
             if (moduleSize > 0)
             {
+                const uint8_t moduleId = modules->ids[i];
                 logDebugP("Save module %s (%i) with %i bytes", module->name().c_str(), moduleId, moduleSize);
 
                 // write header for module data
