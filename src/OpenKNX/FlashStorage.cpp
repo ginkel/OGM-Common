@@ -69,23 +69,23 @@ namespace OpenKNX
         // read size
         const uint16_t dataSize = readWord();
 
-        uint8_t *currentPosition;
+        // set begin of data storage
+        uint8_t *dataStart = (_flashStart + _flashSize - FLASH_DATA_META_LEN - dataSize);
 
         // validate checksum
-        currentPosition = (_flashStart + _flashSize - FLASH_DATA_META_LEN - dataSize);
-        // data = _flashStart + _flashSize - FLASH_DATA_META_LEN - dataSize
-        // size = _currentReadAddress - data
-        if (!verifyChecksum(currentPosition, dataSize + FLASH_DATA_META_LEN - FLASH_DATA_INIT_LEN))
+        // TODO check using `size = _currentReadAddress - data`, but length of current implementation includes CHK-bytes
+        if (!verifyChecksum(dataStart, dataSize + FLASH_DATA_META_LEN - FLASH_DATA_INIT_LEN))
         {
             openknx.log("FlashStorage", "   - Abort: Checksum invalid!");
-            openknx.logHex("FlashStorage", currentPosition, dataSize + FLASH_DATA_META_LEN - FLASH_DATA_INIT_LEN);
+            openknx.logHex("FlashStorage", dataStart, dataSize + FLASH_DATA_META_LEN - FLASH_DATA_INIT_LEN);
             return;
         }
 
 #ifdef FLASH_DATA_TRACE
-        openknx.logHex("FlashStorage", currentPosition, dataSize + FLASH_DATA_META_LEN);
+        openknx.logHex("FlashStorage", dataStart, dataSize + FLASH_DATA_META_LEN);
 #endif
 
+        uint8_t *currentPosition = dataStart;
         uint16_t dataProcessed = 0;
         while (dataProcessed < dataSize)
         {
