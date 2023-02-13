@@ -85,14 +85,12 @@ namespace OpenKNX
         openknx.logHex("FlashStorage", dataStart, dataSize + FLASH_DATA_META_LEN);
 #endif
 
-        uint8_t *currentPosition = dataStart;
         uint16_t dataProcessed = 0;
         while (dataProcessed < dataSize)
         {
-            _currentReadAddress = currentPosition;
+            _currentReadAddress = dataStart + dataProcessed;
             const uint8_t moduleId = readByte();
             const uint16_t moduleSize = readWord();
-            currentPosition = _currentReadAddress;
 
             Module *module = openknx.getModule(moduleId);
             if (module == nullptr)
@@ -103,12 +101,12 @@ namespace OpenKNX
             {
                 openknx.log("FlashStorage", "  restore module %s (%i) with %i bytes", module->name().c_str(), moduleId, moduleSize);
 #ifdef FLASH_DATA_TRACE
-                openknx.logHex("FlashStorage", currentPosition, moduleSize);
+                openknx.logHex("FlashStorage", _currentReadAddress, moduleSize);
 #endif
-                module->readFlash(currentPosition, moduleSize);
+                module->readFlash(_currentReadAddress, moduleSize);
                 loadedModules[moduleId] = true;
             }
-            currentPosition = (currentPosition + moduleSize);
+            
             dataProcessed += FLASH_DATA_MODULE_ID_LEN + FLASH_DATA_SIZE_LEN + moduleSize;
         }
     }
