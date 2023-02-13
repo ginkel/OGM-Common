@@ -57,14 +57,11 @@ namespace OpenKNX
         // start reading all other fields in META in order
         _currentReadAddress = _flashStart + _flashSize - FLASH_DATA_META_LEN;
 
-        // read FirmwareVersion
+        // read and check FirmwareVersion/Number
         _lastFirmwareNumber = readWord();
-        openknx.log("FlashStorage", "  FirmwareNumber: 0x%04X", _lastFirmwareNumber);
-
         _lastFirmwareVersion = readWord();
+        openknx.log("FlashStorage", "  FirmwareNumber: 0x%04X", _lastFirmwareNumber);
         openknx.log("FlashStorage", "  FirmwareVersion: %i", _lastFirmwareVersion);
-
-        // check FirmwareNumber
         if (_lastFirmwareNumber != openknx.info.firmwareNumber())
         {
             openknx.log("FlashStorage", "  - Abort: Data from other application");
