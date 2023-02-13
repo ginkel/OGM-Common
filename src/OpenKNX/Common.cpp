@@ -1,5 +1,6 @@
 #include "Common.h"
 #include "../HardwareDevices.h"
+#include "ProgLed.h"
 
 namespace OpenKNX
 {
@@ -92,10 +93,17 @@ namespace OpenKNX
 
         digitalWrite(PROG_LED_PIN, LOW);
 
+        #ifndef DEBUGPROGLED
         // pin or GPIO the programming led is connected to. Default is LED_BUILDIN
         knx.ledPin(PROG_LED_PIN);
         // is the led active on HIGH or low? Default is LOW
         knx.ledPinActiveOn(PROG_LED_PIN_ACTIVE_ON);
+        #else
+        knx.ledPin(0);
+        knx.setProgLedOnCallback(ProgLed::ProgLedOn);
+        knx.setProgLedOffCallback(ProgLed::ProgLedOff);
+        #endif
+
         // pin or GPIO programming button is connected to. Default is 0
         knx.buttonPin(PROG_BUTTON_PIN);
         // Is the interrup created in RISING or FALLING signal? Default is RISING
@@ -198,6 +206,11 @@ namespace OpenKNX
 
         // loop console helper
         console.loop();
+
+#ifdef DEBUGPROGLED
+        // loop prog led
+        progLed.loop();
+#endif
 
         // loop  knx stack
         knx.loop();
