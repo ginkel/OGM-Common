@@ -159,23 +159,20 @@ namespace OpenKNX
             const uint16_t moduleSize = module->flashSize();
             const uint8_t moduleId = modules->ids[i];
 
-            if (moduleSize == 0)
-                continue;
+            if (moduleSize > 0)
+            {
+                openknx.log("FlashStorage", "  save module %s (%i) with %i bytes", module->name().c_str(), moduleId, moduleSize);
 
-            // write data
-            _maxWriteAddress = _currentWriteAddress +
-                               FLASH_DATA_MODULE_ID_LEN +
-                               FLASH_DATA_SIZE_LEN;
+                // write header for module data
+                _maxWriteAddress = _currentWriteAddress + FLASH_DATA_MODULE_ID_LEN + FLASH_DATA_SIZE_LEN;
+                writeByte(moduleId);
+                writeWord(moduleSize);
 
-            writeByte(moduleId);
-
-            writeWord(moduleSize);
-
-            _maxWriteAddress = _currentWriteAddress + moduleSize;
-
-            openknx.log("FlashStorage", "  save module %s (%i) with %i bytes", module->name().c_str(), moduleId, moduleSize);
-            module->writeFlash();
-            writeFilldata();
+                // write the module data
+                _maxWriteAddress = _currentWriteAddress + moduleSize;
+                module->writeFlash();
+                writeFilldata();
+            }
         }
 
         // write magicword
