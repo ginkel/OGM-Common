@@ -54,10 +54,10 @@ namespace OpenKNX
             return;
         }
 
-        currentPosition = _flashStart + _flashSize - FLASH_DATA_META_LEN;
+        // start reading all other fields in META in order
+        _currentReadAddress = _flashStart + _flashSize - FLASH_DATA_META_LEN;
 
         // read FirmwareVersion
-        _currentReadAddress = currentPosition;
         _lastFirmwareNumber = readWord();
         openknx.log("FlashStorage", "  FirmwareNumber: 0x%04X", _lastFirmwareNumber);
 
@@ -75,7 +75,9 @@ namespace OpenKNX
         const uint16_t dataSize = readWord();
 
         // validate checksum
-        currentPosition = (currentPosition - dataSize);
+        currentPosition = (_flashStart + _flashSize - FLASH_DATA_META_LEN - dataSize);
+        // data = _flashStart + _flashSize - FLASH_DATA_META_LEN - dataSize
+        // size = _currentReadAddress - data
         if (!verifyChecksum(currentPosition, dataSize + FLASH_DATA_META_LEN - FLASH_DATA_INIT_LEN))
         {
             openknx.log("FlashStorage", "   - Abort: Checksum invalid!");
