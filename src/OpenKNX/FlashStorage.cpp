@@ -93,7 +93,6 @@ namespace OpenKNX
             const uint8_t moduleId = readByte();
             const uint16_t moduleSize = readWord();
             currentPosition = _currentReadAddress;
-            dataProcessed += FLASH_DATA_MODULE_ID_LEN + FLASH_DATA_SIZE_LEN + moduleSize;
 
             Module *module = openknx.getModule(moduleId);
             if (module == nullptr)
@@ -110,6 +109,7 @@ namespace OpenKNX
                 loadedModules[moduleId] = true;
             }
             currentPosition = (currentPosition + moduleSize);
+            dataProcessed += FLASH_DATA_MODULE_ID_LEN + FLASH_DATA_SIZE_LEN + moduleSize;
         }
     }
 
