@@ -60,14 +60,11 @@ namespace OpenKNX
         // start reading all other fields in META in order
         _currentReadAddress = _flashStart + _flashSize - FLASH_DATA_META_LEN;
 
-        // read FirmwareVersion
+        // read and check FirmwareVersion/Number
         _lastFirmwareNumber = readWord();
-        logDebugP("FirmwareNumber: 0x%04X", _lastFirmwareNumber);
-
         _lastFirmwareVersion = readWord();
+        logDebugP("FirmwareNumber: 0x%04X", _lastFirmwareNumber);
         logDebugP("FirmwareVersion: %i", _lastFirmwareVersion);
-
-        // check FirmwareNumber
         if (_lastFirmwareNumber != openknx.info.firmwareNumber())
         {
             logErrorP("Abort: Data from other application");
