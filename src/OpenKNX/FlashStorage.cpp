@@ -64,6 +64,13 @@ namespace OpenKNX
         _lastFirmwareVersion = readWord();
         openknx.log("FlashStorage", "  FirmwareVersion: %i", _lastFirmwareVersion);
 
+        // check FirmwareNumber
+        if (_lastFirmwareNumber != openknx.info.firmwareNumber())
+        {
+            openknx.log("FlashStorage", "  - Abort: Data from other application");
+            return;
+        }
+
         // read size
         const uint16_t dataSize = readWord();
 
@@ -73,13 +80,6 @@ namespace OpenKNX
         {
             openknx.log("FlashStorage", "   - Abort: Checksum invalid!");
             openknx.logHex("FlashStorage", currentPosition, dataSize + FLASH_DATA_META_LEN - FLASH_DATA_INIT_LEN);
-            return;
-        }
-
-        // check FirmwareNumber
-        if (_lastFirmwareNumber != openknx.info.firmwareNumber())
-        {
-            openknx.log("FlashStorage", "  - Abort: Data from other application");
             return;
         }
 
