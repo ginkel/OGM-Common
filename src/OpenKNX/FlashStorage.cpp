@@ -93,7 +93,7 @@ namespace OpenKNX
             _currentReadAddress = currentPosition;
             const uint8_t moduleId = readByte();
             const uint16_t moduleSize = readWord();
-            currentPosition = (currentPosition + FLASH_DATA_MODULE_ID_LEN + FLASH_DATA_SIZE_LEN);
+            currentPosition = _currentReadAddress;
             dataProcessed += FLASH_DATA_MODULE_ID_LEN + FLASH_DATA_SIZE_LEN + moduleSize;
 
             Module *module = openknx.getModule(moduleId);
@@ -105,7 +105,6 @@ namespace OpenKNX
             {
                 logDebugP("Restore module %s (%i) with %i bytes", module->name().c_str(), moduleId, moduleSize);
                 logIndentUp();
-                _currentReadAddress = currentPosition;
                 logHexTraceP(currentPosition, moduleSize);
                 module->readFlash(currentPosition, moduleSize);
                 loadedModules[moduleId] = true;
