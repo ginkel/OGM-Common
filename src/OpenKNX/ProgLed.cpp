@@ -7,6 +7,7 @@ namespace OpenKNX
     {
         // TODO: PROG_LED_PIN_ACTIVE_ON
         // Dimming
+        // normal mode
 
         int frequency;
         if(_ledState)
