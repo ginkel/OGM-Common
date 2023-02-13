@@ -72,21 +72,20 @@ namespace OpenKNX
         // read size
         const uint16_t dataSize = readWord();
 
-        uint8_t *currentPosition;
+        // set begin of data storage
+        uint8_t *dataStart = (_flashStart + _flashSize - FLASH_DATA_META_LEN - dataSize);
 
         // validate checksum
-        currentPosition = (_flashStart + _flashSize - FLASH_DATA_META_LEN - dataSize);
-        // data = _flashStart + _flashSize - FLASH_DATA_META_LEN - dataSize
-        // size = _currentReadAddress - data
-        if (!verifyChecksum(currentPosition, dataSize + FLASH_DATA_META_LEN - FLASH_DATA_INIT_LEN))
+        if (!verifyChecksum(dataStart, dataSize + FLASH_DATA_META_LEN - FLASH_DATA_INIT_LEN))
         {
             logErrorP("Abort: Checksum invalid!");
-            logHexErrorP(currentPosition, dataSize + FLASH_DATA_META_LEN - FLASH_DATA_INIT_LEN);
+            logHexErrorP(dataStart, dataSize + FLASH_DATA_META_LEN - FLASH_DATA_INIT_LEN);
             return;
         }
 
-        logHexTraceP(currentPosition, dataSize + FLASH_DATA_META_LEN);
+        logHexTraceP(dataStart, dataSize + FLASH_DATA_META_LEN);
 
+        uint8_t *currentPosition = dataStart;
         uint16_t dataProcessed = 0;
         while (dataProcessed < dataSize)
         {
