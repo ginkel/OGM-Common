@@ -67,6 +67,13 @@ namespace OpenKNX
         _lastFirmwareVersion = readWord();
         logDebugP("FirmwareVersion: %i", _lastFirmwareVersion);
 
+        // check FirmwareNumber
+        if (_lastFirmwareNumber != openknx.info.firmwareNumber())
+        {
+            logErrorP("Abort: Data from other application");
+            return;
+        }
+
         // read size
         const uint16_t dataSize = readWord();
 
@@ -76,13 +83,6 @@ namespace OpenKNX
         {
             logErrorP("Abort: Checksum invalid!");
             logHexErrorP(currentPosition, dataSize + FLASH_DATA_META_LEN - FLASH_DATA_INIT_LEN);
-            return;
-        }
-
-        // check FirmwareNumber
-        if (_lastFirmwareNumber != openknx.info.firmwareNumber())
-        {
-            logErrorP("Abort: Data from other application");
             return;
         }
 
