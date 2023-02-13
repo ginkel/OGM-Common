@@ -118,7 +118,6 @@ namespace OpenKNX
 
         uint32_t start = millis();
         uint8_t moduleId = 0;
-        uint16_t dataSize = 0;
         uint16_t moduleSize = 0;
         Module *module = nullptr;
 
@@ -133,28 +132,25 @@ namespace OpenKNX
 
         openknx.log("FlashStorage", "save <%i>", force);
 
-        // determine some values
         Modules *modules = openknx.getModules();
-        dataSize = 0;
+        
+        // calculate the overall required size to store data for all modules
+        uint16_t dataSize = 0;
         for (uint8_t i = 0; i < modules->count; i++)
         {
             moduleSize = modules->list[i]->flashSize();
-            if (moduleSize == 0)
-                continue;
-
-            dataSize += moduleSize +
-                        FLASH_DATA_MODULE_ID_LEN +
-                        FLASH_DATA_SIZE_LEN;
+            if (moduleSize > 0)
+            {
+                dataSize += FLASH_DATA_MODULE_ID_LEN + FLASH_DATA_SIZE_LEN + moduleSize;
+            }
         }
 
 #ifdef FLASH_DATA_TRACE
         openknx.log("FlashStorage", "  dataSize: %i", dataSize);
 #endif
 
-        // start point
-        _currentWriteAddress = _flashSize -
-                               dataSize -
-                               FLASH_DATA_META_LEN;
+        // start point (based on right alignment within available size of flash)
+        _currentWriteAddress = _flashSize - dataSize - FLASH_DATA_META_LEN;
 
 #ifdef FLASH_DATA_TRACE
         openknx.log("FlashStorage", "  startPosition: %i", _currentWriteAddress);
