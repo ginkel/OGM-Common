@@ -46,14 +46,15 @@ namespace OpenKNX
     {
         uint8_t *currentPosition;
 
-        // check magicwords exists
-        currentPosition = _flashStart + _flashSize - FLASH_DATA_META_LEN;
-        _currentReadAddress = currentPosition + FLASH_DATA_META_LEN - FLASH_DATA_INIT_LEN;
+        // check magicwords exists (at last position)
+        _currentReadAddress = _flashStart + _flashSize - FLASH_DATA_INIT_LEN;
         if (FLASH_DATA_INIT != readInt())
         {
             openknx.log("FlashStorage", "   - Abort: No data found");
             return;
         }
+
+        currentPosition = _flashStart + _flashSize - FLASH_DATA_META_LEN;
 
         // read size
         _currentReadAddress = currentPosition + FLASH_DATA_META_LEN - FLASH_DATA_INIT_LEN - FLASH_DATA_CHK_LEN - FLASH_DATA_SIZE_LEN;
