@@ -9,7 +9,6 @@
 #define DEBUGPROGLED_FREQ_OFF 1000
 #endif
 
-
 namespace OpenKNX
 {
     enum class ProgLedMode
@@ -26,7 +25,6 @@ namespace OpenKNX
         bool _ledState = false;
         bool _blinkState = false;
         void SwitchLED(bool state);
-
 
       public:
         // Dimm the ProgLED. only useable if PROG_LED_PIN supports PWM (analogWrite)

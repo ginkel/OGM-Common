@@ -1,18 +1,18 @@
-#include "OpenKNX/Common.h"
 #include "ProgLed.h"
+#include "OpenKNX/Common.h"
 
 namespace OpenKNX
 {
     void ProgLed::loop()
     {
-        if(_progLedMode == ProgLedMode::Debug)
+        if (_progLedMode == ProgLedMode::Debug)
         {
             int frequency;
             if (_ledState)
                 frequency = DEBUGPROGLED_FREQ_ON;
             else
                 frequency = 1000;
-            
+
             if (delayCheck(_millis, DEBUGPROGLED_FREQ_OFF))
             {
                 _millis = millis();
@@ -46,7 +46,7 @@ namespace OpenKNX
         }
         else
         {
-            analogWrite(PROG_LED_PIN, state?_brightness:0);
+            analogWrite(PROG_LED_PIN, state ? _brightness : 0);
         }
     }
 
