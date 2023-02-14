@@ -12,14 +12,25 @@
 
 namespace OpenKNX
 {
+    enum class ProgLedMode
+    {
+        Normal,
+        Debug,
+        Off
+    };
+
     class ProgLed
     {
       private:
         uint32_t _millis = 0;
         bool _ledState = false;
         bool _blinkState = false;
+        void SwitchLED(bool state);
+
 
       public:
+        uint8_t _brightness = 255;
+        ProgLedMode _progLedMode = ProgLedMode::Normal;
         void loop();
         void SetLedState(bool state);
         static void ProgLedOn();

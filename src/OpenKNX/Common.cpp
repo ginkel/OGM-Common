@@ -93,16 +93,18 @@ namespace OpenKNX
 
         digitalWrite(PROG_LED_PIN, LOW);
 
-        #ifndef DEBUGPROGLED
+#ifndef OPENKNXROGLED
         // pin or GPIO the programming led is connected to. Default is LED_BUILDIN
         knx.ledPin(PROG_LED_PIN);
         // is the led active on HIGH or low? Default is LOW
         knx.ledPinActiveOn(PROG_LED_PIN_ACTIVE_ON);
-        #else
+#else
         knx.ledPin(0);
         knx.setProgLedOnCallback(ProgLed::ProgLedOn);
         knx.setProgLedOffCallback(ProgLed::ProgLedOff);
-        #endif
+        progLed._progLedMode = ProgLedMode::Normal;
+        progLed._brightness = 255;
+#endif
 
         // pin or GPIO programming button is connected to. Default is 0
         knx.buttonPin(PROG_BUTTON_PIN);
@@ -207,7 +209,7 @@ namespace OpenKNX
         // loop console helper
         console.loop();
 
-#ifdef DEBUGPROGLED
+#ifdef OPENKNXPROGLED
         // loop prog led
         progLed.loop();
 #endif
