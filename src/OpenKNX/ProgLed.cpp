@@ -5,60 +5,66 @@ namespace OpenKNX
 {
     void ProgLed::loop()
     {
-        if (_progLedMode == ProgLedMode::Debug)
+        if (_mode == ProgLedMode::Off && _ledState)
         {
-            int frequency;
-            if (_ledState)
-                frequency = DEBUGPROGLED_FREQ_ON;
-            else
-                frequency = 1000;
-
-            if (delayCheck(_millis, DEBUGPROGLED_FREQ_OFF))
-            {
-                _millis = millis();
-                _blinkState = !_blinkState;
-                SwitchLED(_blinkState);
-            }
+            switchLED(_blinkState);
+            return;
         }
+
+        if (_mode != ProgLedMode::Debug)
+            return;
+
+        if (!delayCheck(_millis, OPENKNX_PROGLED_DEBUG_FREQ))
+            return;
+
+        _millis = millis();
+        _blinkState = !_blinkState;
+        switchLED(_blinkState);
     }
 
-    void ProgLed::SetLedState(bool state)
+    void ProgLed::switchLED(bool state)
     {
-        _ledState = state;
-        if (_progLedMode == ProgLedMode::Normal)
-        {
-            SwitchLED(_ledState);
-        }
-    }
+        if (_mode == ProgLedMode::Off)
+            return;
 
-    void ProgLed::SwitchLED(bool state)
-    {
         if (PROG_LED_PIN_ACTIVE_ON == LOW)
             state = !state;
 
         if (_brightness == 255)
-        {
             digitalWrite(PROG_LED_PIN, state);
-        }
         else if (_brightness == 0)
-        {
             digitalWrite(PROG_LED_PIN, LOW);
-        }
         else
-        {
             analogWrite(PROG_LED_PIN, state ? _brightness : 0);
-        }
     }
 
-    void ProgLed::ProgLedOn()
+    void ProgLed::brightness(uint8_t brightness)
     {
-        progLed.SetLedState(true);
+        _brightness = brightness;
     }
 
-    void ProgLed::ProgLedOff()
+    void ProgLed::mode(ProgLedMode mode)
     {
-        progLed.SetLedState(false);
+        _mode = mode;
     }
 
-    OpenKNX::ProgLed progLed;
+    void ProgLed::state(bool state)
+    {
+        if (_mode == ProgLedMode::Off)
+            return;
+
+        _ledState = state;
+        if (_mode == ProgLedMode::Normal)
+            switchLED(_ledState);
+    }
+
+    void ProgLed::on()
+    {
+        state(true);
+    }
+
+    void ProgLed::off()
+    {
+        state(false);
+    }
 } // namespace OpenKNX

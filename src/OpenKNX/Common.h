@@ -90,6 +90,7 @@ namespace OpenKNX
         Logger logger;
         TimerInterrupt timerInterrupt;
         Hardware hardware;
+        ProgLed progLed;
 
         Common();
 

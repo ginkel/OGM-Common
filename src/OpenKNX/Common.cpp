@@ -32,7 +32,7 @@ namespace OpenKNX
     void Common::initKnx()
     {
         log("OpenKNX", "init knx");
-        
+
 #if defined(ARDUINO_ARCH_RP2040) && defined(KNX_SERIAL)
         KNX_SERIAL.setRX(KNX_UART_RX_PIN);
         KNX_SERIAL.setTX(KNX_UART_TX_PIN);
@@ -92,23 +92,20 @@ namespace OpenKNX
 
         digitalWrite(PROG_LED_PIN, LOW);
 
-#ifndef OPENKNXROGLED
-        // pin or GPIO the programming led is connected to. Default is LED_BUILDIN
-        knx.ledPin(PROG_LED_PIN);
-        // is the led active on HIGH or low? Default is LOW
-        knx.ledPinActiveOn(PROG_LED_PIN_ACTIVE_ON);
-#else
         knx.ledPin(0);
-        knx.setProgLedOnCallback(ProgLed::ProgLedOn);
-        knx.setProgLedOffCallback(ProgLed::ProgLedOff);
-        progLed._progLedMode = ProgLedMode::Normal;
-        progLed._brightness = 255;
-#endif
+        knx.setProgLedOnCallback([]() -> void {
+            openknx.progLed.on();
+        });
+        knx.setProgLedOffCallback([]() -> void {
+            openknx.progLed.off();
+        });
 
         // pin or GPIO programming button is connected to. Default is 0
         knx.buttonPin(PROG_BUTTON_PIN);
-        // Is the interrup created in RISING or FALLING signal? Default is RISING
-        // knx.buttonPinInterruptOn(PROG_BUTTON_PIN_INTERRUPT_ON);
+        // #ifdef PROG_BUTTON_PIN_INTERRUPT_ON
+        //         // Is the interrup created in RISING or FALLING signal? Default is RISING
+        //         knx.buttonPinInterruptOn(PROG_BUTTON_PIN_INTERRUPT_ON);
+        // #endif
 
         appSetup();
 
@@ -211,10 +208,8 @@ namespace OpenKNX
         // loop console helper
         console.loop();
 
-#ifdef OPENKNXPROGLED
         // loop prog led
         progLed.loop();
-#endif
 
         // loop  knx stack
         knx.loop();

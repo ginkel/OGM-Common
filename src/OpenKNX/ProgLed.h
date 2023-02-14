@@ -1,12 +1,8 @@
 #pragma once
 #include "knx.h"
 
-#ifndef DEBUGPROGLED_FREQ_ON
-#define DEBUGPROGLED_FREQ_ON 200
-#endif
-
-#ifndef DEBUGPROGLED_FREQ_OFF
-#define DEBUGPROGLED_FREQ_OFF 1000
+#ifndef OPENKNX_PROGLED_DEBUG_FREQ
+#define OPENKNX_PROGLED_DEBUG_FREQ 1000
 #endif
 
 namespace OpenKNX
@@ -24,16 +20,17 @@ namespace OpenKNX
         uint32_t _millis = 0;
         bool _ledState = false;
         bool _blinkState = false;
-        void SwitchLED(bool state);
+        void switchLED(bool state);
+        uint8_t _brightness = 255;
+        ProgLedMode _mode = ProgLedMode::Normal;
 
       public:
-        // Dimm the ProgLED. only useable if PROG_LED_PIN supports PWM (analogWrite)
-        uint8_t _brightness = 255;
-        ProgLedMode _progLedMode = ProgLedMode::Normal;
         void loop();
-        void SetLedState(bool state);
-        static void ProgLedOn();
-        static void ProgLedOff();
+        // Dimm the ProgLED. only useable if PROG_LED_PIN supports PWM (analogWrite)
+        void brightness(uint8_t brightness);
+        void mode(ProgLedMode mode);
+        void state(bool state);
+        void on();
+        void off();
     };
-    extern OpenKNX::ProgLed progLed;
 } // namespace OpenKNX
