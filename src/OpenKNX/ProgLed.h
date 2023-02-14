@@ -29,6 +29,7 @@ namespace OpenKNX
 
 
       public:
+        // Dimm the ProgLED. only useable if PROG_LED_PIN supports PWM (analogWrite)
         uint8_t _brightness = 255;
         ProgLedMode _progLedMode = ProgLedMode::Normal;
         void loop();
