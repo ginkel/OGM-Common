@@ -1,6 +1,5 @@
 #include "Common.h"
 #include "../HardwareDevices.h"
-#include "ProgLed.h"
 
 namespace OpenKNX
 {

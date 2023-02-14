@@ -6,6 +6,7 @@
 #include "OpenKNX/Information.h"
 #include "OpenKNX/Logger.h"
 #include "OpenKNX/Module.h"
+#include "OpenKNX/ProgLed.h"
 #include "OpenKNX/TimerInterrupt.h"
 #include "hardware.h"
 #include "knxprod.h"
