@@ -208,9 +208,6 @@ namespace OpenKNX
         // loop console helper
         console.loop();
 
-        // loop prog led
-        progLed.loop();
-
         // loop  knx stack
         knx.loop();
 
