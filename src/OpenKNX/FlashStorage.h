@@ -207,7 +207,6 @@ namespace OpenKNX
 
       private:
         bool *loadedModules;
-        uint8_t *_flashStart;
         uint16_t _flashSize = 0;
         uint8_t *_flashEnd;
         uint32_t _lastWrite = 0;

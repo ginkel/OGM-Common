@@ -10,8 +10,7 @@ namespace OpenKNX
     void FlashStorage::init()
     {
         _flashSize = knx.platform().getNonVolatileMemorySize();
-        _flashStart = knx.platform().getNonVolatileMemoryStart();
-        _flashEnd = _flashStart + _flashSize;
+        _flashEnd = knx.platform().getNonVolatileMemoryStart() + _flashSize;
     }
 
     void FlashStorage::load()
