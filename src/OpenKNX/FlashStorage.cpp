@@ -68,10 +68,8 @@ namespace OpenKNX
             return;
         }
 
-        // read size
+        // read size and infer begin of data storage
         const uint16_t dataSize = readWord();
-
-        // set begin of data storage
         uint8_t *dataStart = (_flashEnd - FLASH_DATA_META_LEN - dataSize);
 
         // validate checksum
