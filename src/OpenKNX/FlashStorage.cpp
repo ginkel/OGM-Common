@@ -115,6 +115,7 @@ namespace OpenKNX
         _checksum = 0;
         _flashSize = knx.platform().getNonVolatileMemorySize();
         _flashStart = knx.platform().getNonVolatileMemoryStart();
+        uint8_t *_flashEnd = _flashStart + _flashSize;
 
         uint32_t start = millis();
 
@@ -193,7 +194,7 @@ namespace OpenKNX
 
         knx.platform().commitNonVolatileMemory();
 #ifdef FLASH_DATA_TRACE
-        openknx.logHex("FlashStorage", _flashStart + _flashSize - dataSize - FLASH_DATA_META_LEN, dataSize + FLASH_DATA_META_LEN);
+        openknx.logHex("FlashStorage", _flashEnd - dataSize - FLASH_DATA_META_LEN, dataSize + FLASH_DATA_META_LEN);
 #endif
 
         _lastWrite = millis();
