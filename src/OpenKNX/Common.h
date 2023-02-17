@@ -7,7 +7,7 @@
 #include "OpenKNX/Information.h"
 #include "OpenKNX/Logger.h"
 #include "OpenKNX/Module.h"
-#include "OpenKNX/TimerInterrupt.h"
+//#include "OpenKNX/TimerInterrupt.h"
 #include "hardware.h"
 #include "knxprod.h"
 #include <knx.h>
@@ -73,7 +73,7 @@ namespace OpenKNX
         void processModulesLoop();
         void registerCallbacks();
         void processRestoreSavePin();
-        void initMemoryTimerInterrupt();
+        //void initMemoryTimerInterrupt();
 #ifdef WATCHDOG
         void watchdogSetup();
 #endif
@@ -87,7 +87,7 @@ namespace OpenKNX
         Information info;
         Console console;
         Logger logger;
-        TimerInterrupt timerInterrupt;
+        //TimerInterrupt timerInterrupt;
         Hardware hardware;
 
         Common();

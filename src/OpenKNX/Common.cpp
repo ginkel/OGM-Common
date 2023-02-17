@@ -11,7 +11,7 @@ namespace OpenKNX
         SERIAL_DEBUG.begin(115200);
         ArduinoPlatform::SerialDebug = &SERIAL_DEBUG;
 
-        timerInterrupt.init();
+        //timerInterrupt.init();
         hardware.progLed.init(PROG_LED_PIN, PROG_LED_PIN_ACTIVE_ON);
 #ifdef INFO_LED_PIN
         hardware.infoLed.init(INFO_LED_PIN, INFO_LED_PIN_ACTIVE_ON);
