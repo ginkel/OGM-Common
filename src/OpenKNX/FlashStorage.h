@@ -209,6 +209,7 @@ namespace OpenKNX
         bool *loadedModules;
         uint8_t *_flashStart;
         uint16_t _flashSize = 0;
+        uint8_t *_flashEnd;
         uint32_t _lastWrite = 0;
         uint16_t _lastFirmwareNumber = 0;
         uint16_t _lastFirmwareVersion = 0;
@@ -216,6 +217,7 @@ namespace OpenKNX
         uint32_t _currentWriteAddress = 0;
         uint8_t *_currentReadAddress = 0;
         uint32_t _maxWriteAddress = 0;
+        void init();
         void writeFilldata();
         void readData();
         void initUnloadedModules();

@@ -7,10 +7,16 @@ namespace OpenKNX
         return "FlashStorage";
     }
 
-    void FlashStorage::load()
+    void FlashStorage::init()
     {
         _flashSize = knx.platform().getNonVolatileMemorySize();
         _flashStart = knx.platform().getNonVolatileMemoryStart();
+        _flashEnd = _flashStart + _flashSize;
+    }
+
+    void FlashStorage::load()
+    {
+        init();
         uint32_t start = millis();
         loadedModules = new bool[openknx.getModules()->count];
         logInfoP("Load data from flash");
@@ -47,8 +53,6 @@ namespace OpenKNX
     */
     void FlashStorage::readData()
     {
-        uint8_t *_flashEnd = _flashStart + _flashSize;
-        
         // check magicwords exists (at last position)
         _currentReadAddress = _flashEnd - FLASH_DATA_INIT_LEN;
         if (FLASH_DATA_INIT != readInt())
@@ -114,10 +118,8 @@ namespace OpenKNX
 
     void FlashStorage::save(bool force /* = false */)
     {
+        init();
         _checksum = 0;
-        _flashSize = knx.platform().getNonVolatileMemorySize();
-        _flashStart = knx.platform().getNonVolatileMemoryStart();
-        uint8_t *_flashEnd = _flashStart + _flashSize;
 
         uint32_t start = millis();
 
