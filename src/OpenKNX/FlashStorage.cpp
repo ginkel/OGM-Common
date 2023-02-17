@@ -47,8 +47,10 @@ namespace OpenKNX
     */
     void FlashStorage::readData()
     {
+        uint8_t *_flashEnd = _flashStart + _flashSize;
+        
         // check magicwords exists (at last position)
-        _currentReadAddress = _flashStart + _flashSize - FLASH_DATA_INIT_LEN;
+        _currentReadAddress = _flashEnd - FLASH_DATA_INIT_LEN;
         if (FLASH_DATA_INIT != readInt())
         {
             logInfoP("Abort: No data found");
@@ -56,7 +58,7 @@ namespace OpenKNX
         }
 
         // start reading all other fields in META in order
-        _currentReadAddress = _flashStart + _flashSize - FLASH_DATA_META_LEN;
+        _currentReadAddress = _flashEnd - FLASH_DATA_META_LEN;
 
         // read and check FirmwareVersion/Number
         _lastFirmwareNumber = readWord();
@@ -73,7 +75,7 @@ namespace OpenKNX
         const uint16_t dataSize = readWord();
 
         // set begin of data storage
-        uint8_t *dataStart = (_flashStart + _flashSize - FLASH_DATA_META_LEN - dataSize);
+        uint8_t *dataStart = (_flashEnd - FLASH_DATA_META_LEN - dataSize);
 
         // validate checksum
         if (!verifyChecksum(dataStart, dataSize + FLASH_DATA_META_LEN - FLASH_DATA_INIT_LEN))
