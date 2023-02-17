@@ -73,7 +73,6 @@ namespace OpenKNX
         uint8_t *dataStart = (_flashEnd - FLASH_DATA_META_LEN - dataSize);
 
         // validate checksum
-        // TODO check using `size = _currentReadAddress - data`, but length of current implementation includes CHK-bytes
         if (!verifyChecksum(dataStart, dataSize + FLASH_DATA_META_LEN - FLASH_DATA_INIT_LEN))
         {
             openknx.log("FlashStorage", "   - Abort: Checksum invalid!");
