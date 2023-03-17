@@ -1,35 +1,42 @@
-$checkVersion = "1.5.8"
-$toolsExist = Test-Path -PathType Leaf ~/bin/OpenKNXproducer.exe
-if ($toolsExist) {
-    $toolsExist = [System.Version]((~/bin/OpenKNXproducer version) -split ' ')[1] -ge [System.Version]$checkVersion
-}
-if ($toolsExist) {
-    $toolsExist = Test-Path -PathType Leaf ~/bin/bossac.exe
-}
-if (!$toolsExist) {
-    Write-Host "
-        Fuer das Setup fehlen die notwendigen OpenKNX-Tools oder sie sind veraltet..
-        Bitte das neuste Paket herunterladen
 
-            https://github.com/OpenKNX/OpenKNXproducer/releases
-        
-        entpacken und das Readme befolgen. Weitere Informationen hierzu gibt es im OpenKNX-Wiki
+if ($IsMacOS -or $IsLinux) {
+  Write-Host "
+  This OS does not support OpenKNX-Tools. Please use Windows to Build KNX production file. 
+  For more Informations visit: https://github.com/OpenKNX/OpenKNX/wiki/Installation-of-OpenKNX-tools"  -ForegroundColor red -BackgroundColor white
+  Start-Sleep -Seconds 5
+} else {
+  $checkVersion = "1.5.8"
+  $toolsExist = Test-Path -PathType Leaf ~/bin/OpenKNXproducer.exe
+  if ($toolsExist) {
+      $toolsExist = [System.Version]((~/bin/OpenKNXproducer version) -split ' ')[1] -ge [System.Version]$checkVersion
+  }
+  if ($toolsExist) {
+      $toolsExist = Test-Path -PathType Leaf ~/bin/bossac.exe
+  }
+  if (!$toolsExist) {
+      Write-Host "
+          Fuer das Setup fehlen die notwendigen OpenKNX-Tools oder sie sind veraltet..
+          Bitte das neuste Paket herunterladen
 
-            https://github.com/OpenKNX/OpenKNX/wiki/Installation-of-OpenKNX-tools
+              https://github.com/OpenKNX/OpenKNXproducer/releases
+          
+          entpacken und das Readme befolgen. Weitere Informationen hierzu gibt es im OpenKNX-Wiki
 
-        Danach bitte dieses Script erneut starten.
+              https://github.com/OpenKNX/OpenKNX/wiki/Installation-of-OpenKNX-tools
 
-        ACHTUNG: Heutige Browser warnen vor dem Inhalt des OpenKNX-Tools Pakets, 
-                 weil es ausfuehrbare Programme und ein PowerShell-Skript enthaellt.
-                 Falls jemand dem Paketinhalt nicht traut, kann er sich OpenKNXproducer
-                 und bossac selber kompilieren und entsprechend installieren.
-    "
-    timeout /T -1
-}
+          Danach bitte dieses Script erneut starten.
 
-if ($toolsExist) {
-    $xml = Get-ChildItem data/*.xml
-    $filename = [System.IO.Path]::GetFileNameWithoutExtension($xml)
-    ~/bin/OpenKNXproducer.exe knxprod --NoXsd --Output="./$filename.knxprod" "data/$filename.xml"
-    timeout /T 20 
-}
+          ACHTUNG: Heutige Browser warnen vor dem Inhalt des OpenKNX-Tools Pakets, 
+                  weil es ausfuehrbare Programme und ein PowerShell-Skript enthaellt.
+                  Falls jemand dem Paketinhalt nicht traut, kann er sich OpenKNXproducer
+                  und bossac selber kompilieren und entsprechend installieren.
+      "
+      timeout /T -1
+  }
+
+  if ($toolsExist) {
+      $xml = Get-ChildItem data/*.xml
+      $filename = [System.IO.Path]::GetFileNameWithoutExtension($xml)
+      ~/bin/OpenKNXproducer.exe knxprod --NoXsd --Output="./$filename.knxprod" "data/$filename.xml"
+      timeout /T 20 
+  }

@@ -26,7 +26,8 @@ if (Test-Path -Path scripts/Readme-Hardware.html -PathType Leaf) {
 }
 
 # cleanup
-Remove-Item "release/$($settings.targetName).knxprod"
+if ($IsMacOS -or $IsLinux) { Write-Host "No knxprod created. Skip copy to target."}
+else { Remove-Item "release/$($settings.targetName).knxprod" }
 
 # calculate version string
 $appVersion=Select-String -Path "$($settings.knxprod)" -Pattern MAIN_ApplicationVersion
