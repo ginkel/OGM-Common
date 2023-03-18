@@ -26,8 +26,17 @@ if (Test-Path -Path scripts/Readme-Hardware.html -PathType Leaf) {
 }
 
 # cleanup
-if ($IsMacOS -or $IsLinux) { Write-Host "No knxprod created. Skip copy to target."}
-else { Remove-Item "release/$($settings.targetName).knxprod" }
+if ($IsMacOS -or $IsLinux) { 
+Write-Host -ForegroundColor Yellow "
+  Info: The knxprod (KNX Production) file is not created. 
+  This OS does not support OpenKNX-Tools to create knxprod file.
+  Please use Windows to Build your own KNX production file.
+
+  For more Informations visit: 
+  https://github.com/OpenKNX/OpenKNX/wiki/Installation-of-OpenKNX-tools"
+
+Start-Sleep -Seconds 5
+} else { Remove-Item "release/$($settings.targetName).knxprod" }
 
 # calculate version string
 $appVersion=Select-String -Path "$($settings.knxprod)" -Pattern MAIN_ApplicationVersion
@@ -56,4 +65,4 @@ Compress-Archive -Path release/* -DestinationPath Release.zip
 Remove-Item -Recurse release/*
 Move-Item Release.zip "release/$($settings.targetName)-$($settings.appRelease)-$appVersion.zip"
 
-Write-Host "Release $($settings.targetName)-$($settings.appRelease)-$appVersion successfully created!"
+Write-Host -ForegroundColor Green "Release $($settings.targetName)-$($settings.appRelease)-$appVersion successfully created!"
