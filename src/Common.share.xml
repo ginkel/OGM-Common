@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-model href="../../Organization/knxprod-support/knx_project_14/knx-editor.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<KNX xmlns:op="http://github.com/OpenKNX/OpenKNXproducer" xmlns="http://knx.org/xml/project/14" CreatedBy="KNX MT" ToolVersion="5.1.255.16695">
+  <ManufacturerData>
+    <Manufacturer RefId="M-00FA">
+      <Baggages>
+        <!-- Alternative addressing example with relative path. This path is always relative to src dir -->
+        <!-- <Baggage TargetPath="A0\00" Name="..\..\OGM-Common\resources\OpenKNX-Logo.png" Id="%FILE-Icon-Test%">
+          <FileInfo TimeInfo="%DATETIME%" />
+        </Baggage> -->
+        <Baggage TargetPath="" Name="CommonHelpFile_de-DE.zip" Id="%FILE-HELP-de%">
+          <FileInfo TimeInfo="%DATETIME%" />
+        </Baggage>
+      </Baggages>
+    </Manufacturer>
+  </ManufacturerData>
+</KNX>
